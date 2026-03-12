@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <?php include 'jsCDN.php'; ?>
-    <style>
-      <style>
+<style>
 .navbar{
     background-color:#4E342E !important; /* coffee brown */
 }
@@ -34,6 +26,7 @@
     background-color:#FFD54F;
     color:#4E342E;
 }
+
 .navbar-coffee{
     background-color: #6f4e37; /* coffee brown */
 }
@@ -46,13 +39,12 @@
 .navbar-coffee .nav-link:hover{
     color: #ffd700; /* coffee shop yellow highlight */
 }
-    </style>
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-coffee">
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-coffee">
   <div class="container-fluid">
 
-    <a class="navbar-brand" href="#">☕ Cafeteria</a>
+    <a class="navbar-brand" href="/">☕ Cafeteria</a>
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
       <span class="navbar-toggler-icon"></span>
@@ -63,31 +55,29 @@
       <ul class="navbar-nav me-auto">
 
         <li class="nav-item">
-          <a class="nav-link active" href="#">Home</a>
+          <a class="nav-link active" href="/">Home</a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" href="#">Products</a>
+          <a class="nav-link" href="/admin/products">Products</a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" href="#">Orders</a>
+          <a class="nav-link" href="/admin/orders">Orders</a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" href="#">Users</a>
+          <a class="nav-link" href="/admin/users">Users</a>
         </li>
 
       </ul>
 
-      <form class="d-flex">
-        <input class="form-control me-2" type="search" placeholder="Search coffee...">
-        <button class="btn btn-outline-success">Search</button>
-      </form>
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/logout">Logout</a>
+        </li>
+      </ul>
 
     </div>
   </div>
 </nav>
-    <?php include 'jsCDN.php'; ?>
-</body>
-</html>

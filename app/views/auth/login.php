@@ -1,38 +1,44 @@
 <?php
+require_once __DIR__ . "/../../config/Database.php";
+require_once __DIR__ . "/../../models/User.php";
+
 session_start();
 
-$errors = [];
-$old = [];
-$success = "";
+$database = new Database();
+$db = $database->connect();
 
-// Handle form submission
-if($_SERVER['REQUEST_METHOD'] === 'POST') {
+// Process login
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $email = trim($_POST["email"] ?? "");
+    $password = $_POST["password"] ?? "";
 
-    $old = $_POST;
-    $email = trim($_POST['email']);
-    $password = $_POST['password'];
-
-    // -------- Email Validation --------
-    if(empty($email)){
-        $errors['email'] = "Email is required";
-    } elseif(!filter_var($email, FILTER_VALIDATE_EMAIL)){
-        $errors['email'] = "Invalid email format";
+    if (empty($email) || empty($password)) {
+        header("Location: /login?error=Email and password required");
+        exit();
     }
 
-    // -------- Password Validation --------
-    if(empty($password)){
-        $errors['password'] = "Password is required";
+    $userModel = new User($db);
+    $user = $userModel->getByEmail($email);
+
+    if (!$user || !password_verify($password, $user["password"])) {
+        header("Location: /login?error=Invalid email or password");
+        exit();
     }
 
-    // -------- Success --------
-    if(empty($errors)){
-        // For demo purposes, just show success
-        // Here you can check the credentials in the database
-        $success = "Login successful!";
-        $old = [];
+    $_SESSION["user_id"] = $user["id"];
+    $_SESSION["user_name"] = $user["name"];
+    $_SESSION["user_role"] = $user["role"];
+
+    if ($user["role"] === "admin") {
+        header("Location: /admin/users");
+    } else {
+        header("Location: /");
     }
+    exit();
 }
 
+$error = $_GET["error"] ?? null;
+$success = $_GET["success"] ?? null;
 ?>
 
 <!DOCTYPE html>
@@ -41,17 +47,24 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cafeteria Login</title>
-<?php include "../layouts/jsCDN.php"?>
+<?php include __DIR__ . "/../layouts/jsCDN.php"; ?>
 </head>
 <body>
-    <?php include "../layouts/navbar.php"?>
 
 <div class="container mt-5" style="max-width: 500px;">
 
     <h1 class="text-center mb-4">Cafeteria</h1>
 
-    <?php if($success){ ?>
-    <div class="alert alert-success text-center"><?php echo $success; ?></div>
+    <?php if ($error) { ?>
+    <div class="alert alert-danger text-center"><?php echo htmlspecialchars(
+        $error,
+    ); ?></div>
+    <?php } ?>
+
+    <?php if ($success) { ?>
+    <div class="alert alert-success text-center"><?php echo htmlspecialchars(
+        $success,
+    ); ?></div>
     <?php } ?>
 
     <form action="" method="post">
@@ -59,33 +72,25 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
         <!-- Email -->
         <div class="mb-3">
             <label class="form-label">Email</label>
-            <input 
-                type="text" 
-                class="form-control" 
-                name="email" 
-                value="<?php echo htmlspecialchars($old['email'] ?? ''); ?>">
-            <?php if(isset($errors['email'])){ ?>
-            <p style="color:#6b2c2c; font-size:14px;"><?php echo $errors['email']; ?></p>
-            <?php } ?>
+            <input
+                type="email"
+                class="form-control"
+                name="email"
+                required>
         </div>
 
         <!-- Password -->
         <div class="mb-3">
             <label class="form-label">Password</label>
-            <input type="password" class="form-control" name="password">
-            <?php if(isset($errors['password'])){ ?>
-            <p style="color:#6b2c2c; font-size:14px;"><?php echo $errors['password']; ?></p>
-            <?php } ?>
+            <input type="password" class="form-control" name="password" required>
         </div>
 
         <!-- Login Button -->
         <div class="mb-3 d-flex justify-content-between align-items-center">
             <button type="submit" class="btn btn-primary">Login</button>
-            <a href="forgot-password.php">Forgot Password?</a>
         </div>
 
     </form>
 </div>
-
 </body>
 </html>
