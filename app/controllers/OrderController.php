@@ -19,6 +19,51 @@ class OrderController
         $_SESSION['cart'][$id] = ($_SESSION['cart'][$id] ?? 0) + 1;
     }
 
+    private function buildAdminOrdersRedirect(array $params = []): string
+    {
+        if (empty($params)) {
+            return '/admin/orders';
+        }
+
+        return '/admin/orders?' . http_build_query($params);
+    }
+
+    public function handleAdminStatusUpdate(): void
+    {
+        if (!isset($_SESSION['user_id']) || ($_SESSION['user_role'] ?? '') !== 'admin') {
+            header('Location: /login?error=Please login first');
+            exit();
+        }
+
+        $redirectParams = [];
+        $fromDate = trim((string)($_POST['from'] ?? ''));
+        $toDate = trim((string)($_POST['to'] ?? ''));
+        if ($fromDate !== '') {
+            $redirectParams['from'] = $fromDate;
+        }
+        if ($toDate !== '') {
+            $redirectParams['to'] = $toDate;
+        }
+
+        if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') {
+            $redirectParams['error'] = 'Invalid request method';
+            header('Location: ' . $this->buildAdminOrdersRedirect($redirectParams));
+            exit();
+        }
+
+        $orderId = (int)($_POST['order_id'] ?? 0);
+        $status = trim((string)($_POST['status'] ?? ''));
+
+        if ($this->updateStatusByAdmin($orderId, $status)) {
+            $redirectParams['success'] = 'Order status updated successfully';
+        } else {
+            $redirectParams['error'] = 'Failed to update order status';
+        }
+
+        header('Location: ' . $this->buildAdminOrdersRedirect($redirectParams));
+        exit();
+    }
+
     public function increase(int $id)
     {
         if (isset($_SESSION['cart'][$id])) {
@@ -381,5 +426,22 @@ class OrderController
         ");
             $stmt->execute([$orderId, $userId]);
             return $stmt->rowCount() > 0;
+    }
+
+    public function updateStatusByAdmin(int $orderId, string $status): bool
+    {
+        if ($orderId <= 0) {
+            return false;
+        }
+
+        $allowedStatuses = ['processing', 'out_for_delivery', 'done', 'cancelled'];
+        if (!in_array($status, $allowedStatuses, true)) {
+            return false;
+        }
+
+        $stmt = $this->conn->prepare("UPDATE orders SET status = ? WHERE id = ?");
+        $stmt->execute([$status, $orderId]);
+
+        return $stmt->rowCount() > 0;
     }
 }

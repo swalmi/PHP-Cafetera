@@ -100,6 +100,11 @@ switch ($uri) {
         require_once __DIR__ . "/../app/views/admin/orders.php";
         break;
 
+    case "/admin/orders/status":
+        $controller = new OrderController($db);
+        $controller->handleAdminStatusUpdate();
+        break;
+
     case "/admin/checks":
         require_once __DIR__ . "/../app/views/admin/checks.php";
         break;

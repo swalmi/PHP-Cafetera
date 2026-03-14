@@ -9,6 +9,8 @@ $orderController = new OrderController($db);
 
 $fromDate = trim($_GET['from'] ?? '');
 $toDate = trim($_GET['to'] ?? '');
+$success = trim($_GET['success'] ?? '');
+$error = trim($_GET['error'] ?? '');
 
 $orders = $orderController->getAllForAdmin($fromDate !== '' ? $fromDate : null, $toDate !== '' ? $toDate : null);
 $orderIds = array_map(static fn($order) => (int)$order['id'], $orders);
@@ -127,6 +129,20 @@ $statusLabels = [
 			</div>
 
 			<div class="card-body">
+				<?php if ($success !== ''): ?>
+					<div class="alert alert-success alert-dismissible fade show" role="alert">
+						<?= htmlspecialchars($success) ?>
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
+				<?php endif; ?>
+
+				<?php if ($error !== ''): ?>
+					<div class="alert alert-danger alert-dismissible fade show" role="alert">
+						<?= htmlspecialchars($error) ?>
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
+				<?php endif; ?>
+
 				<?php if (empty($orders)): ?>
 					<div class="alert alert-info mb-0">No orders found for the selected range.</div>
 				<?php else: ?>
@@ -170,7 +186,27 @@ $statusLabels = [
 										</td>
 										<td><?= htmlspecialchars($order['room_name'] ?? 'N/A') ?></td>
 										<td><?= number_format((float)$order['total_price'], 2) ?></td>
-										<td><span class="badge bg-<?= $statusMeta['class'] ?>"><?= $statusMeta['label'] ?></span></td>
+										<td>
+											<div class="d-flex align-items-center gap-2 flex-wrap">
+												<span class="badge bg-<?= $statusMeta['class'] ?>"><?= $statusMeta['label'] ?></span>
+												<form method="POST" action="/admin/orders/status" class="d-flex align-items-center gap-2">
+													<input type="hidden" name="order_id" value="<?= $orderId ?>">
+													<?php if ($fromDate !== ''): ?>
+														<input type="hidden" name="from" value="<?= htmlspecialchars($fromDate) ?>">
+													<?php endif; ?>
+													<?php if ($toDate !== ''): ?>
+														<input type="hidden" name="to" value="<?= htmlspecialchars($toDate) ?>">
+													<?php endif; ?>
+													<select name="status" class="form-select form-select-sm">
+														<option value="processing" <?= $status === 'processing' ? 'selected' : '' ?>>Processing</option>
+														<option value="out_for_delivery" <?= $status === 'out_for_delivery' ? 'selected' : '' ?>>Out For Delivery</option>
+														<option value="done" <?= $status === 'done' ? 'selected' : '' ?>>Done</option>
+														<option value="cancelled" <?= $status === 'cancelled' ? 'selected' : '' ?>>Cancelled</option>
+													</select>
+													<button type="submit" class="btn btn-sm btn-outline-success">Update</button>
+												</form>
+											</div>
+										</td>
 										<td><?= date('M d, Y H:i', strtotime($order['created_at'])) ?></td>
 										<td>
 											<button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#<?= $detailsId ?>">
