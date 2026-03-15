@@ -1,16 +1,14 @@
 <link rel="stylesheet" href="/assets/css/bootstrap.css">
 
 <style>
-  body {
-    background: #f4efe9;
-  }
   .content {
     padding: 28px;
   }
   .panel {
-    background: #f7f1ea;
-    border-radius: 16px;
-    border: 1px solid rgba(0,0,0,.08);
+    background: #fff;
+    border: 1px solid #4E342E;
+    border-radius:14px;
+    overflow:hidden;
     padding: 22px;
   }
   .req { color: #b42318; font-weight: 600; }
@@ -33,6 +31,64 @@
     border-radius: 10px;
     margin: 0 auto;
   }
+
+  .page-title{
+    font-weight:700;
+    color:#4E342E;
+  }
+
+  .btn-action{
+    border-radius:20px;
+    padding:4px 12px;
+    font-size:0.85rem;
+    transition:all .25s ease;
+    border-color:#4E342E;
+    background:#4E342E;
+    color:#fff;
+  }
+
+  .btn-action:hover{
+    background:#6f4e37;
+    border-color:#6f4e37;
+    color:#fff;
+  }
+
+  .btn-save{
+    border-radius:20px;
+    padding:8px 20px;
+    font-size:0.9rem;
+    transition:all .25s ease;
+    border-color:#4E342E;
+    background:#4E342E;
+    color:#fff;
+  }
+
+  .btn-save:hover{
+    background:#6f4e37;
+    border-color:#6f4e37;
+    color:#fff;
+  }
+
+  .alert{
+    border-radius:12px;
+  }
+    .btn-cancel {
+    border-radius: 20px;
+    padding: 8px 20px;
+    font-size: 0.9rem;
+    transition: all 0.25s ease;
+    border: 1px solid #4E342E;
+    background: #fff;
+    color: #4E342E;
+    text-decoration: none;
+}
+
+.btn-cancel:hover {
+    background: #6f4e37;
+    color: #fff;
+    border-color: #6f4e37;
+    text-decoration: none;
+}
 </style>
 
 <?php
@@ -57,10 +113,10 @@
   <main class="content">
     <div class="panel">
 
-      <div class="d-flex justify-content-between align-items-center mb-1">
-        <h2 class="mb-0">Edit Product</h2>
+<div class="d-flex justify-content-between align-items-center mb-1">
+        <h2 class="page-title mb-0">Edit Product</h2>
         <a href="/admin/products" 
-           class="btn btn-outline-secondary btn-sm">
+           class="btn btn-action">
           ← Back to Products
         </a>
       </div>
@@ -140,10 +196,10 @@
               </div>
             </div>
 
-            <div class="d-flex gap-2 mt-4">
-              <button type="submit" class="btn btn-success px-4">Update Product</button>
+<div class="d-flex gap-2 mt-4">
+              <button type="submit" class="btn btn-save">Update Product</button>
               <a href="/admin/products" 
-                 class="btn btn-outline-secondary px-4">
+                 class="btn-cancel" style="border-radius:20px;">
                 Cancel
               </a>
             </div>

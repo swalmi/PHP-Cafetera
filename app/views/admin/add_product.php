@@ -1,16 +1,14 @@
 <link rel="stylesheet" href="/assets/css/bootstrap.css">
 
 <style>
-  body {
-    background: #f4efe9;
-  }
   .content {
     padding: 28px;
   }
   .panel{
-    background: #f7f1ea;
-    border-radius: 16px;
-    border: 1px solid rgba(0,0,0,.08);
+    background: #fff;
+    border: 1px solid #4E342E;
+    border-radius:14px;
+    overflow:hidden;
     padding: 22px;
   }
   .req{ color:#b42318; font-weight:600; }
@@ -66,6 +64,57 @@
     cursor: pointer;
   }
   .close:hover { color: #000; }
+
+  .page-title{
+    font-weight:700;
+    color:#4E342E;
+  }
+
+  .btn-action{
+    border-radius:20px;
+    padding:4px 12px;
+    font-size:0.85rem;
+    transition:all .25s ease;
+    border-color:#4E342E;
+    background:#4E342E;
+    color:#fff;
+  }
+  .btn-action:hover{
+    background:#6f4e37;
+    border-color:#6f4e37;
+    color:#fff;
+  }
+
+  .btn-save{
+    border-radius:20px;
+    padding:8px 20px;
+    font-size:0.9rem;
+    transition:all .25s ease;
+    border-color:#4E342E;
+    background:#4E342E;
+    color:#fff;
+  }
+  .btn-save:hover{
+    background:#6f4e37;
+    border-color:#6f4e37;
+    color:#fff;
+  }
+
+  .btn-reset {
+    border-radius: 20px;
+    padding: 8px 20px;
+    font-size: 0.9rem;
+    transition: all 0.25s ease;
+    border: 1px solid #4E342E;
+    background: #fff;
+    color: #4E342E;
+}
+
+.btn-reset:hover {
+    background: #6f4e37;
+    color: #fff;
+    border-color: #6f4e37;
+}
 </style>
 
 <?php
@@ -74,9 +123,9 @@
   require_once __DIR__ . '/../../controllers/ProductController.php';
 ?>
 
-  <main class="content">
+<main class="content">
     <div class="panel">
-      <h2 class="mb-1">Add New Product</h2>
+      <h2 class="page-title mb-1">Add New Product</h2>
       <div class="text-muted small mb-4">Dashboard &gt; Products &gt; Add New Product</div>
 
       <?php if(isset($_GET['msg'])): ?>
@@ -178,9 +227,9 @@
               </div>
             </div>
 
-            <div class="d-flex gap-2 mt-4">
-              <button type="submit" class="btn btn-success px-4">Save Product</button>
-              <button type="reset" class="btn btn-outline-secondary px-4">Reset</button>
+<div class="d-flex gap-2 mt-4">
+              <button type="submit" class="btn btn-save">Save Product</button>
+              <button type="reset" class="btn-reset">Reset</button>
             </div>
           </div>
 

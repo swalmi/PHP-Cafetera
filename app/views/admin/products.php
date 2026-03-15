@@ -1,17 +1,14 @@
 <link rel="stylesheet" href="/assets/css/bootstrap.css">
 
 <style>
-  body {
-    background: #f4efe9;
-  }
   .content {
     padding: 28px;
   }
   .panel {
-    background: #f7f1ea;
-    border-radius: 16px;
-    border: 1px solid rgba(0,0,0,.08);
-    padding: 22px;
+    background: #fff;
+    border:none;
+    border-radius:14px;
+    overflow:hidden;
   }
   .product-img {
     width: 55px;
@@ -27,6 +24,53 @@
     font-size: .8rem;
     font-weight: 600;
   }
+  .page-title{
+    font-weight:700;
+    color:#4E342E;
+  }
+  .table thead{
+    background:#4E342E;
+    color:#fff;
+  }
+  .table th{
+    background:#4E342E;
+    color:#fff;
+    font-weight:600;
+    border:none;
+  }
+  .btn-action{
+    border-radius:20px;
+    padding:4px 12px;
+    font-size:0.85rem;
+    transition:all .25s ease;
+    border-color:#4E342E;
+    background:#4E342E;
+    color:#fff;
+  }
+  .btn-action:hover{
+    background:#6f4e37;
+    border-color:#6f4e37;
+    color:#fff;
+  }
+  .btn-delete{
+    border-radius:20px;
+    padding:4px 12px;
+    font-size:0.85rem;
+    transition:all .25s ease;
+    border-color: #dc3545;
+    background:#dc3545;
+    color:#fff;
+    text-decoration: none;
+  }
+  .btn-delete:hover{
+    color:#dc3545;
+    background:#fff;
+    border-color:#dc3545;
+    text-decoration: none;
+  }
+  .alert{
+    border-radius:12px;
+  }
 </style>
 
 <?php
@@ -40,13 +84,13 @@
   <main class="content">
     <div class="panel">
 
-      <div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-          <h2 class="mb-0">All Products</h2>
+          <h2 class="page-title mb-0">All Products</h2>
           <div class="text-muted small">Dashboard &gt; Products</div>
         </div>
         <a href="/admin/add-product" 
-           class="btn btn-success">
+           class="btn btn-action">
           + Add New Product
         </a>
       </div>
@@ -152,18 +196,18 @@
 
                   <td><?= date('d M Y', strtotime($product['created_at'])) ?></td>
 
-                  <td>
+<td>
                     <div class="d-flex gap-2">
                       <a href="/admin/edit-product?id=<?= $product['id'] ?>" 
-                         class="btn btn-sm btn-outline-primary">
+                         class="btn btn-sm btn-action">
                         Edit
                       </a>
 
                        <a href="/admin/products/delete?id=<?= $product['id'] ?>&image=<?= urlencode($product['image']) ?>"
-                         class="btn btn-sm btn-outline-danger"
+                         class="btn-delete"
                          onclick="return confirm('Are you sure you want to delete <?= htmlspecialchars($product['name']) ?>?')">
-                         Delete
-                      </a>
+                        Delete
+                     </a>
                     </div>
                   </td>
                 </tr>
