@@ -13,7 +13,14 @@ if (!$userId) {
     exit();
 }
 
-$orders = $orderController->getByUserId($userId);
+$fromDate = trim($_GET["from"] ?? "");
+$toDate = trim($_GET["to"] ?? "");
+
+$orders = $orderController->getUserOrdersForChecks(
+    $userId,
+    $fromDate !== "" ? $fromDate : null,
+    $toDate !== "" ? $toDate : null,
+);
 
 $error = $_GET['error'] ?? null;
 $success = $_GET['success'] ?? null;
@@ -100,12 +107,43 @@ a.cancel:hover,
     border-radius: 12px;
 }
 
+.btn-filter {
+    background: #4E342E;
+    border: none;
+    color: #fff;
+    padding: 8px 22px;
+    border-radius: 25px;
+    font-weight: 600;
+    transition: .25s;
+}
+
+.btn-filter:hover {
+    background: #6f4e37;
+}
+
+.btn-clear {
+    border-radius: 20px;
+    padding: 8px 20px;
+    font-size: 0.9rem;
+    transition: all 0.25s ease;
+    border: 1px solid #4E342E;
+    background: transparent;
+    color: #4E342E;
+    text-decoration: none;
+}
+
+.btn-clear:hover {
+    background: #4E342E;
+    color: #fff;
+    border-color: #4E342E;
+    text-decoration: none;
+}
+
 .empty-orders {
     background: white;
     padding: 40px;
     border-radius: 14px;
     text-align: center;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.06);
 }
 
 .empty-orders a {
@@ -129,6 +167,25 @@ a.cancel:hover,
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="page-title">My Orders</h2>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+                <form class="row g-3" method="GET" action="/my-orders">
+            <div class="col-md-4">
+                <label class="form-label">From Date</label>
+                <input type="date" name="from" class="form-control" value="<?= htmlspecialchars($fromDate) ?>">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">To Date</label>
+                <input type="date" name="to" class="form-control" value="<?= htmlspecialchars($toDate) ?>">
+            </div>
+            <div class="col-md-4 d-flex align-items-end gap-2">
+                <button type="submit" class="btn-filter">Filter</button>
+                <a href="/my-orders" class="btn-clear">Clear</a>
+            </div>
+        </form>
+    </div>
 </div>
 
 <?php if ($error): ?>
@@ -229,12 +286,20 @@ $statusClass = match($order['status']) {
 </div>
 </div>
 
-<?php else: ?>
+<?php else: 
+
+$hasFilters = $fromDate !== "" || $toDate !== "";
+?>
 
 <div class="empty-orders">
-<h5>No Orders Yet ☕</h5>
-<p class="text-muted">You haven't placed any orders yet.</p>
-<a href="/">Browse products</a>
+<?php if ($hasFilters): ?>
+    <h5>No Orders Found</h5>
+    <p class="text-muted">No orders found for the selected date range.</p>
+<?php else: ?>
+    <h5>No Orders Yet ☕</h5>
+    <p class="text-muted">You haven't placed any orders yet.</p>
+    <a href="/">Browse products</a>
+<?php endif; ?>
 </div>
 
 <?php endif; ?>
